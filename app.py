@@ -3,6 +3,10 @@ import requests
 
 app = Flask(__name__)
 
+@app.route('/')
+def index():
+    return "Welcome to my Flask App!"
+
 @app.route('/check-redirect', methods=['GET'])
 def check_redirect():
     url = request.args.get('url')
@@ -14,4 +18,10 @@ def check_redirect():
             redirected_url = response.headers['Location']
             return jsonify({'redirected_url': redirected_url}), 200
         else:
-            return jsonify({'error': 'No redirect found'}
+            return jsonify({'error': 'No redirect found'}), 404
+      
+    except requests.exceptions.RequestException as e:
+        return jsonify({'error': 'Internal server error'}), 500
+
+if __name__ == '__main__':
+    app.run(debug=True)
